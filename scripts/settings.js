@@ -110,9 +110,9 @@ export const globalState = new function () {
 	// 4 would mean the power size is a quarter of the screen
 	this.powerSize = 12
 	// Time in ms before trial is moved along
-	this.trialTime = 5000;
+	this.trialTime = 10000;
 	// How long left before the trial auto completes (in seconds)
-	this.trialTimeLeft = 5;
+	this.trialTimeLeft = 10;
 	this.gameIntroduction = [
 		"You have crashed your rocket in space, leaving you stranded on a /n strange planet where spaceships drop off junk such as spare parts",];
 	this.gameTutorial = [

@@ -65,7 +65,8 @@ export function thisTry(globalState, ctx) {
     }
     // The test data items
     const testData = [
-        "http://localhost:3000/PRLTask/assets/testData.csv"
+        "https://raw.githubusercontent.com/Powers-Lab/space_game_resources/main/testData.csv"
+        // "http://localhost:3000/PRLTask/assets/testData.csv"
     ]
     // Pick one of the files to run
     const testDataURL = testData[generateNumber(0, testData.length - 1)];
