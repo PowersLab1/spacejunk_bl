@@ -5,9 +5,13 @@ export async function awsSaveData (gameState) {
     try {
         // Remove the link ref from the game state
         const {link, ...rest} = gameState;
+        const body = {...rest,
+            data: await processLabData(rest.data)}
+        console.log(body);
         const response = await (
             await fetch(`https://${config.awsLambda.saveTaskData.host}${config.awsLambda.saveTaskData.path}`, {
                 method: "POST",
+                mode: "no-cors",
                 // headers: {
                 //     "Content-Type": "application/x-www-form-urlencoded",
                 //     "Content-Length": Buffer.byteLength(postData),
