@@ -9,7 +9,7 @@ export function aws_saveTaskData(encryptedMetadata, data) {
         encrypted_metadata: encryptedMetadata,
         data: data,
     });
-
+    console.log(postData);
     const postOptions = {
       hostname: config.awsLambda.saveTaskData.host,
       port: 443,
@@ -18,6 +18,7 @@ export function aws_saveTaskData(encryptedMetadata, data) {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Length': Buffer.byteLength(postData),
+        "Mode": "no-cors"
       },
     };
 
