@@ -4,6 +4,7 @@ import backgroundImage from "../resources/background_level6.jpg"
 import "./Font.css"
 import { Redirect } from './Redirect';
 import { aws_saveTaskData } from '../lib/aws_lambda';
+import * as config from "../config.json";
 
 const style = {
     fontFamily: "VT323",
@@ -59,6 +60,14 @@ export const Completed = ({ gameState }) => {
                 //     taskVersion: gameState.taskVersion,
                 //     data: gameState.data
                 // }));
+
+                gameState.data = await JSON.stringify({
+                    encrypted_metadata: gameState.encryptedMetadata,
+                    taskName: config.taskName,
+                    taskVersion: config.taskVersion,
+                    data: gameState.data,
+                });
+
                 const response = await awsSaveData(gameState);
                 aws_saveTaskData(gameState.encryptedMetadata, {
                     encrypted_metadata: gameState.encryptedMetadata,
