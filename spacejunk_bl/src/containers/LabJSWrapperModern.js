@@ -19,7 +19,6 @@ export const LabJSWrapperModern = () => {
         encrypted_metadata: undefined,
         taskName: undefined,
         taskVersion: undefined,
-        surveyUrl: undefined,
         link: undefined,
         returning: false,
         data: []
@@ -43,15 +42,14 @@ export const LabJSWrapperModern = () => {
         // !!! REMOVE THIS LINE, ONLY FOR DEV
         if (process.env.NODE_ENV === "development") {
             console.log("Adding Params ID as in dev");
-            params.id = "U2FsdGVkX1+H0Yb9Y1VrqhnHPXkv2xHkCwc29hSAyVr0DMaKQNjBWnbje4JMrWAJl4+mI836qL95znea8Z2YLg==";
+            params.id = 111;
         }
 
         const newState = {
             encryptedMetadata: params.id,
             taskName: config.taskName,
             taskVersion: config.taskVersion,
-            link: params.survey_url,
-            surveyUrl: params.survey_url
+            link: params.survey_url
         };
 
         console.log(`NEW STATE: ${JSON.stringify(newState)}`);

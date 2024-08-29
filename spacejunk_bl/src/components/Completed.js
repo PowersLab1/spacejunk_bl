@@ -3,7 +3,6 @@ import { awsSaveData } from '../functions/saveTaskData';
 import backgroundImage from "../resources/background_level6.jpg"
 import "./Font.css"
 import { Redirect } from './Redirect';
-import { aws_saveTaskData } from '../lib/aws_lambda';
 
 const style = {
     fontFamily: "VT323",
@@ -53,12 +52,6 @@ export const Completed = ({ gameState }) => {
         // While we have less tried less than 10 times
         if (attempts < 10) {
             async function save(gameState) {
-                // const response = await aws_saveTaskData(gameState.encryptedMetadata, await JSON.stringify({
-                //     encrypted_metadata: gameState.encryptedMetadata,
-                //     taskName: gameState.taskName,
-                //     taskVersion: gameState.taskVersion,
-                //     data: gameState.data
-                // }));
                 const response = await awsSaveData(gameState);
                 console.log(response);
                 if (response !== true) {
