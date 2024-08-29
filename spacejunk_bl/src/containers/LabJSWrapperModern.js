@@ -19,6 +19,7 @@ export const LabJSWrapperModern = () => {
         encrypted_metadata: undefined,
         taskName: undefined,
         taskVersion: undefined,
+        surveyUrl: undefined,
         link: undefined,
         returning: false,
         data: []
@@ -49,7 +50,8 @@ export const LabJSWrapperModern = () => {
             encryptedMetadata: params.id,
             taskName: config.taskName,
             taskVersion: config.taskVersion,
-            link: params.survey_url
+            link: params.survey_url,
+            surveyUrl: params.survey_url
         };
 
         console.log(`NEW STATE: ${JSON.stringify(newState)}`);
