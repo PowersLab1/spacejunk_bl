@@ -4,12 +4,13 @@ const config = require('../config');
 
 export function aws_saveTaskData(encryptedMetadata, data) {
   return new Promise(function(resolve, reject) {
+    console.log("Sending");
     // Call api endpoint for update
     const postData = querystring.stringify({
         encrypted_metadata: encryptedMetadata,
         data: data,
     });
-
+    console.log(postData);
     const postOptions = {
       hostname: config.awsLambda.saveTaskData.host,
       port: 443,
@@ -18,10 +19,12 @@ export function aws_saveTaskData(encryptedMetadata, data) {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Length': Buffer.byteLength(postData),
+        "Mode": "no-cors"
       },
     };
 
     const req = https.request(postOptions, (res) => {
+      console.log(res);
       res.setEncoding('utf8');
       res.on('data', () => {});
       res.on('end', resolve);
