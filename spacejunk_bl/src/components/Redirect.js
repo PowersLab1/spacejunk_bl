@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { awsFetchLink } from '../functions/saveTaskData';
 
-export const Redirect = (link, encryptedMetadata) => {
+export const Redirect = ({link, encryptedMetadata}) => {
     const [urlLink, setURLLink] = useState(link);
     const [attempts, setAttempts] = useState(0);
 
@@ -26,8 +26,9 @@ export const Redirect = (link, encryptedMetadata) => {
             }
         }
     }, [attempts, urlLink])
-    if (link) {
-        window.location.assign(link);
+    if (urlLink) {
+        console.log(urlLink);
+        window.location.href = urlLink;
         return null;
     }
     else {

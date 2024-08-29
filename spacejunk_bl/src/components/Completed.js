@@ -44,47 +44,30 @@ export const Completed = ({ gameState }) => {
     const [redirect, setRedirect] = useState(false);
     const [attempts, setAttempts] = useState(0);
     const [success, setSuccess] = useState(false);
-    const [time, setTime] = useState(0);
 
 
     useEffect(() => {
 
         const taskData = JSON.parse(localStorage.getItem("TestResults"));
         gameState.data = taskData;
+        console.log(gameState.surveyUrl);
         // While we have less tried less than 10 times
         if (attempts < 10) {
             async function save(gameState) {
-                // const response = await aws_saveTaskData(gameState.encryptedMetadata, await JSON.stringify({
-                //     encrypted_metadata: gameState.encryptedMetadata,
-                //     taskName: gameState.taskName,
-                //     taskVersion: gameState.taskVersion,
-                //     data: gameState.data
-                // }));
-
-                gameState.data = await JSON.stringify({
-                    encrypted_metadata: gameState.encryptedMetadata,
-                    taskName: config.taskName,
-                    taskVersion: config.taskVersion,
-                    data: gameState.data,
-                });
 
                 const response = await awsSaveData(gameState);
-                aws_saveTaskData(gameState.encryptedMetadata, {
-                    encrypted_metadata: gameState.encryptedMetadata,
-                    survey_url: gameState.surveyUrl,
-                    data: JSON.stringify(gameState.data)
-                })
                 console.log(response);
                 if (response !== true) {
-                    // await setTimeout(() => {
-                    // }, 2000);
-                    setAttempts(attempts + 1);
-                }
-                else {
-                    localStorage.removeItem("TestResults");
-                    localStorage.removeItem("completed");
-                    // We have managed to send the data!
-                    setSuccess(true);
+                    await setTimeout(() => {
+                            setAttempts(attempts + 1);
+                        }, 2000);
+                    }
+                    else {
+                        localStorage.removeItem("TestResults");
+                        localStorage.removeItem("completed");
+                        // We have managed to send the data!
+                        setSuccess(true);
+
                 }
             }
             save(gameState);
@@ -94,15 +77,16 @@ export const Completed = ({ gameState }) => {
 
     const delayAndRedir = () => {setTimeout(() => {setRedirect(true)}, 10000)};
     if (redirect) {
+        console.log(gameState.surveyUrl);
         return (
-            <Redirect link={gameState.link} encryptedMetadata={gameState.encryptedMetadata} />
+            <Redirect link={gameState.surveyUrl} encryptedMetadata={gameState.encryptedMetadata} />
         )
     }
     if (success) {
         delayAndRedir();
             return (
                 <div style={style}>
-                    <div>The game is complete and the data has been sent, thank you for your participation.  Riderecting in 10 seconds</div>)
+                    <div>The game is complete and the data has been sent, thank you for your participation.  Redirecting in 10 seconds</div>
                 </div>
             )
     }
