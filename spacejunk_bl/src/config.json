@@ -1,6 +1,6 @@
 {
   "taskVersion": "1.0.0",
-  "taskName": "prltask",
+  "taskName": "spacejunk_bl",
   "debug": false,
   "awsLambda": {
     "saveTaskData": {
