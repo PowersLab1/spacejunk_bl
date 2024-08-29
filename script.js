@@ -1,7 +1,6 @@
 import { runGame, mouseInputs, touchInputs, keyBoardInputs, clearCanvas } from "./scripts/runGame.js";
 import { globalState } from "./scripts/settings.js"
 import { getData } from "./scripts/getData.js";
-import { generateNumber } from "./scripts/utilities.js";
 import { portraitProtection } from "./scripts/renderScreen.js";
 import { resetPlayer } from "./scripts/resetPlayer.js";
 import { calculateRockPos } from "./scripts/drawImages.js";
@@ -63,13 +62,10 @@ export function thisTry(globalState, ctx) {
         resetPlayer(globalState);
         calculateRockPos(globalState);
     }
-    // The test data items
-    const testData = [
-        "https://raw.githubusercontent.com/Powers-Lab/space_game_resources/main/testData.csv"
-        // "http://localhost:3000/PRLTask/assets/testData.csv"
-    ]
-    // Pick one of the files to run
-    const testDataURL = testData[generateNumber(0, testData.length - 1)];
+
+    // The URL for the test data CSV
+    const testDataURL = "https://raw.githubusercontent.com/Powers-Lab/space_game_resources/main/testData.csv"
+
     // Get the Data for the test
     getData(testDataURL).then((testData) => {
         globalState.testData = testData;
