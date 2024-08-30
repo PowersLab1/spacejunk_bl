@@ -42,7 +42,7 @@ export const LabJSWrapperModern = () => {
         // !!! REMOVE THIS LINE, ONLY FOR DEV
         if (isLocalhost) {
             console.log("Adding Params ID as in dev");
-            params.id = "111";
+            params.id = "U2FsdGVkX1+H0Yb9Y1VrqhnHPXkv2xHkCwc29hSAyVr0DMaKQNjBWnbje4JMrWAJl4+mI836qL95znea8Z2YLg==";
         }
 
         const newState = {

@@ -1,88 +1,65 @@
-import { stringify } from "querystring";
+var https = require('follow-redirects').https;
 const config = require("../config");
-// var https = require('follow-redirects').https;
-// var fs = require('fs');
+var qs = require('querystring');
 
-// var qs = require('querystring');
 
+// Originally had thought to move these requests to more modern frameworks
+// Instead of using this promise structure, but due to the older node version (16)
+// Some of the newer frameworks (such as fetch) were throwing all kinds of fun errors
 
 export async function awsSaveData (gameState) {
     try {
-        // Remove the link ref from the game state
-        // const {link, returning, ...rest} = gameState;
+        // // Remove the link ref from the game state
+        // // const {link, returning, ...rest} = gameState;
         gameState.data = await JSON.stringify({
             encrypted_metadata: gameState.encryptedMetadata,
             taskName: config.taskName,
             taskVersion: config.taskVersion,
             data: await processLabData(gameState.data),
         });
-        console.log(gameState.data)
-        const postData = stringify({
+
+        var options = {
+            'method': 'POST',
+            'hostname': 'de8cnjde61.execute-api.us-east-2.amazonaws.com',
+            'path': '/default/saveTaskData',
+            'headers': {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            'maxRedirects': 20
+          };
+
+          var postData = qs.stringify({
             'encrypted_metadata': gameState.encryptedMetadata,
-            'survey_url': gameState.surveyUrl,
-            "link": gameState.link,
             'data': gameState.data,
+            'surveyUrl': gameState.surveyUrl
           });
-        console.log(postData);
-        const response =
-            await fetch(`https://${config.awsLambda.saveTaskData.host}${config.awsLambda.saveTaskData.path}`, {
-                method: "POST",
-                mode: "no-cors",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: postData
-            });
-        console.log("Done");
-        console.log(response);
-        console.log(response.status);
-        if (response.status === 200)
-        {
-            return true
-        }
 
-        // var options = {
-        //   'method': 'POST',
-        //   'hostname': 'de8cnjde61.execute-api.us-east-2.amazonaws.com',
-        //   'path': '/default/saveTaskData',
-        //   'headers': {
-        //     'Content-Type': 'application/x-www-form-urlencoded'
-        //   },
-        //   'maxRedirects': 20
-        // };
-        
-        // var req = https.request(options, function (res) {
-        //   var chunks = [];
-        
-        //   res.on("data", function (chunk) {
-        //     chunks.push(chunk);
-        //   });
-        
-        //   res.on("end", function (chunk) {
-        //     console.log("END");
-        //     console.log(res.statusCode);
-        //     console.log(res.body);
-        //     var body = Buffer.concat(chunks);
-        //     console.log(body.toString());
-        //   });
-        
-        //   res.on("error", function (error) {
-        //     console.error(error);
-        //   });
-        // });
-        
-        // var postData = qs.stringify({
-        //   'encrypted_metadata': gameState.encryptedMetadata,
-        //   'survey_url': gameState.surveyUrl,
-        //   "link": gameState.link,
-        //   'data': gameState.data,
-        // });
-        
-        // req.write(postData);
-        
-        // req.end();
-
-        // return false;
+        return new Promise(function (resolve, reject) {
+            var req = https.request(options, function (res) {
+                var chunks = [];
+              
+                res.on("data", function (chunk) {
+                  chunks.push(chunk);
+                });
+              
+                res.on("end", function (chunk) {
+                  console.log(res.statusCode);
+                  if (res.statusCode === 200) {
+                    return resolve(true);
+                  }
+                  return resolve(false);
+                });
+              
+                res.on("error", function (error) {
+                    console.error(error);
+                    resolve(false);
+                });
+              });
+             
+              req.write(postData);
+              
+              req.end();
+        });
     }
     catch (e) {
         console.log(`Error sending data: ${e}`);
@@ -93,21 +70,46 @@ export async function awsSaveData (gameState) {
 
 export async function awsFetchLink(encryptedMetadata) {
     try {
-        const response = await (
-            await fetch(`https:///${config.awsLambda.fetchLink.host}${config.awsLambda.fetchLink.path}`,
-                {
-                    method: "POST",
-                    // headers: {
-                    //     "Content-Type": "application/x-www-form-urlencoded",
-                    //     "Content-Length": Buffer.byteLength(postData)
-                    // },
-                    body: { encrypted_metadata: encryptedMetadata }
-                    // body: postData
+
+        const postData = qs.stringify({
+            encrypted_metadata: encryptedMetadata,
+        });
+
+        const postOptions = {
+            hostname: config.awsLambda.fetchLink.host,
+            port: 443,
+            path: config.awsLambda.fetchLink.path,
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Content-Length': Buffer.byteLength(postData),
+            },
+          };
+      
+
+        return new Promise(function (resolve, reject) {
+            
+            const req = https.request(postOptions, (res) => {
+                res.setEncoding('utf8');
+                var body = '';
+                res.on('data', function(d) {
+                    body += d;
+                 });
+                res.on('end', () => resolve({link: body}));
+              })
+
+              req.on('error', (e) => {
+                if (config.debug) {
+                  console.log("ERROR:");
+                  console.log(e);
                 }
-            )
-        ).json();
-        console.log("Done");
-        return response;
+                resolve(null);
+              });
+          
+              req.write(postData);
+              req.end();
+        });
+
     }
     catch (e) {
         console.log(`Error fetching link: ${e}`);
