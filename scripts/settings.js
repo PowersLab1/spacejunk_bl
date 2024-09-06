@@ -114,7 +114,7 @@ export const globalState = new function () {
 	// How long left before the trial auto completes (in seconds)
 	this.trialTimeLeft = 10;
 	this.gameIntroduction = [
-		"You have crashed your rocket in space, leaving you stranded on a /n strange planet where spaceships drop off junk such as spare parts",];
+		"You have crashed your rocket in space, leaving you stranded on a /n strange planet where spaceships drop off junk such as spare parts /n *PRESS SPACE TO CONTINUE*",];
 	this.gameTutorial = [
 		"To fix your rocket and escape, you need to catch these spare parts as they are dropped from ABOVE. /n But here's the catch: you can't see the spaceships because they are too /n high above (just above your screen). You  have to guess where the spare parts will drop!!",
 		"You need to use your light beam to capture the falling parts. However, you only have a small amount of fuel. Therefore, you want to use the narrowest beam possible. /n You will receive more points if you catch the falling parts with a narrower beam. /n You need at least 50% of the beam to touch a falling part to catch it. /n You will not get any points if you miss it.", 
